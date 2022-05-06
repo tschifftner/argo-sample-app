@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-argo-application
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # The project the application belongs to.
+  project: default
+
+  # Source of the application manifests
+  source:
+    repoURL: https://tschifftner/argo-sample-app.git
+    targetRevision: HEAD  # For Helm, this refers to the chart version.
+    path: dev
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: myapp
+
+  syncPolicy:
+    syncOptions: 
+     - CreateNamespace=true
+  
+    automate:
+      selfHeal: true
+      prune: true
